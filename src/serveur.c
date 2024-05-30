@@ -13,11 +13,11 @@
 #define BUFFER_SIZE 255
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        print(LOG_ERROR,"Usage: %s <port>\n", argv[0]);
-        exit(1);
-    }
-    int port = atoi(argv[1]);
+    
+
+    Server_info server_info;
+    server_info = get_server_info();
+    print(LOG_INFO,"Server IP address: %s\nServer port: %d\n", server_info.server_ip_adress,server_info.server_port);
     
 
     // Création du socket
@@ -26,9 +26,13 @@ int main(int argc, char *argv[]) {
         perror("creation socket");
         exit(1);
     }
+    //reuse addr
+    const int enable = 1;
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+        perror("reuseaddr failed");
 
     // Configuration de l'adresse du serveur
-    struct sockaddr_in server_address = create_tcp_server_sockaddr(port);
+    struct sockaddr_in server_address = create_tcp_server_sockaddr(server_info);
     
 
     // Liaison du socket à l'adresse et au port

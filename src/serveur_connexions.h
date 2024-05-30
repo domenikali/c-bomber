@@ -29,7 +29,7 @@ typedef struct Player_new_action Player_new_action;
 
 uint16_t next_packet_number();
 void print_partie(Partie* partie);
-struct sockaddr_in create_tcp_server_sockaddr(int port);
+struct sockaddr_in create_tcp_server_sockaddr(Server_info Server_info);
 struct sockaddr_in6 create_udp_server_sockaddr(int port);
 struct sockaddr_in accept_client(int sock, int * sock_client);
 Mdiff_stat create_mdiff_struct(Message_header header,uint16_t num,Grid grid);

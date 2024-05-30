@@ -117,12 +117,6 @@ void actionSender(int udp_client_sock,struct sockaddr_in6 udp_server_addr, int d
 
 int main(int argc, char *argv[]) {
 
-    if (argc != 2) {
-        printf("Usage: %s <port>\n", argv[0]);
-        exit(1);
-    }
-    int port = atoi(argv[1]);
-
     // Création du socket
     int fdsock = socket(PF_INET, SOCK_STREAM, 0);
     if (fdsock == -1) {
@@ -131,7 +125,8 @@ int main(int argc, char *argv[]) {
     }
 
     // Création de l'adresse du serveur
-    struct sockaddr_in address_sock = create_tcp_client_sockaddr(ADDR,port);
+    Server_info Server_info = get_server_info();
+    struct sockaddr_in address_sock = create_tcp_client_sockaddr(Server_info);
 
 
     // Tentative de connexion au serveur
@@ -250,7 +245,7 @@ int main(int argc, char *argv[]) {
     }
 
     //multicast protocol
-    int ifindex = if_nametoindex ("eth0");
+    int ifindex = if_nametoindex ("enp1s0");
     if(ifindex == 0)
         perror("prototocl err:");
 

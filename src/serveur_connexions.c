@@ -56,13 +56,13 @@ void print_partie(Partie* partie){
 }
 
 //create a tcp sockaddr struct open ready for the bind
-struct sockaddr_in create_tcp_server_sockaddr(int port){
+struct sockaddr_in create_tcp_server_sockaddr(Server_info server_info){
     struct sockaddr_in server_address;
     memset(&server_address, 0, sizeof(server_address));
     
     server_address.sin_family = AF_INET;
     server_address.sin_addr.s_addr = htonl(INADDR_ANY);
-    server_address.sin_port = htons(port);
+    server_address.sin_port = htons(server_info.server_port);
 
     return server_address;
 }

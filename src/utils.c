@@ -314,90 +314,36 @@ void print(LogLevel level, const char *format, ...) {
     
 }
 
-/**
- * void trace_sent(char* packet,size_t packet_size,int thread_id){
-    char* filename = NULL;
-    char* transfer_mode = NULL;
-    switch(get_opcode(packet)){
-        case RRQ:{
-            filename = get_file_name(packet);
-            transfer_mode= get_mode(packet);
-            if(thread_id != -1)printf("THREAD # %d ",thread_id);
-            printf("sent RRQ <file=%s, mode=%s>\n",filename,transfer_mode);
-            free(filename);
-            free(transfer_mode);
-            break;
-        }
-        case WRQ:{
-            filename = get_file_name(packet);
-            transfer_mode = get_mode(packet);
-            if(thread_id != -1)printf("THREAD # %d ",thread_id);
-            printf("sent WRQ <file=%s, mode=%s>\n",filename,transfer_mode);
-            free(filename);
-            free(transfer_mode);
-            break;
-        }
-        case ACK:{
-            if(thread_id != -1)printf("THREAD # %d ",thread_id);
-            printf("sent ACK <block=%d>\n",get_block_number(packet));
-            break;
-        }
-        case DATA:{
-            if(thread_id != -1)printf("THREAD # %d ",thread_id);
-            printf("sent DATA <block=%d, %ld bytes>\n",get_block_number(packet),packet_size);
-            break;
-        }
-        case ERROR:{
-            char* error_msg = get_error_message(packet);
-            if(thread_id != -1){
-                printf("THREAD # %d ",thread_id);
-                }
-            printf("sent ERROR <code=%d, msg=%s>\n",get_error_code(packet),error_msg);
-            free(error_msg);
-            break;
-        }
-        default:
-            break;
+
+char * trim (char * str){
+    while(*str == ' '){
+        str++;
     }
+    return str;
 }
 
-void trace_received(char* packet,size_t packet_size,int thread_id){
-    char* filename = NULL;
-    char* transfer_mode = NULL;
-    char* error_msg = NULL;
-    switch(get_opcode(packet)){
-        case RRQ:
-            filename = get_file_name(packet);
-            transfer_mode= get_mode(packet);
-            if(thread_id != -1)printf("THREAD # %d ",thread_id);
-            printf("received RRQ <file=%s, mode=%s>\n",filename,transfer_mode);
-            free(filename);
-            free(transfer_mode);
-            break;
-        case WRQ:
-            filename = get_file_name(packet);
-            transfer_mode = get_mode(packet);
-            if(thread_id != -1)printf("THREAD # %d ",thread_id);
-            printf("received WRQ <file=%s, mode=%s>\n",filename,transfer_mode);
-            free(filename);
-            free(transfer_mode);
-            break;
-        case ACK:
-            if(thread_id != -1)printf("THREAD # %d ",thread_id);
-            printf("received ACK <block=%d>\n",get_block_number(packet));
-            break;
-        case DATA:
-            if(thread_id != -1)printf("THREAD # %d ",thread_id);
-            printf("received DATA <block=%d, %ld bytes>\n",get_block_number(packet),packet_size);
-            break;
-        case ERROR:
-            error_msg = get_error_message(packet);
-            if(thread_id != -1)printf("THREAD # %d ",thread_id);
-            printf("received ERROR <code=%d, msg=%s>\n",get_error_code(packet),get_error_message(packet));
-            free(error_msg);
-            break;
-        default:
-            break;
+Server_info get_server_info(){
+    int fd ;
+    if((fd=open("config", O_RDONLY))<0){
+        perror("config open:\n");
+        exit(EXIT_FAILURE);
     }
+
+    char buf[1024];
+    memset(buf, 0, 1024);
+    read(fd, buf, 1024);
+    char * server_ip_adress =strtok(buf,"\n");
+    char * server_port = strtok(NULL, "\n");
+    server_ip_adress = strchr(server_ip_adress, ':')+1;
+    server_port = strchr(server_port, ':')+1;
+    server_ip_adress=trim(server_ip_adress);
+    server_port=trim(server_port);
+    
+    close(fd);
+    Server_info info;
+    info.server_ip_adress = my_malloc(sizeof(char)*strlen(server_ip_adress)+1);
+    info.server_port = atoi(server_port);
+    strcpy(info.server_ip_adress,server_ip_adress);
+    info.server_ip_adress[strlen(server_ip_adress)] = '\0';
+    return info;
 }
-*/

@@ -1,11 +1,11 @@
 #include "client_connexions.h"
 //return a tcp sockaddr_in struct with ipv4 and port passed by argument
-struct sockaddr_in create_tcp_client_sockaddr (char* ipv4_addr,int port){
+struct sockaddr_in create_tcp_client_sockaddr (Server_info server_info){
     struct sockaddr_in address_sock;
     memset(&address_sock, 0, sizeof(address_sock));
     address_sock.sin_family = AF_INET;
-    address_sock.sin_port = htons(port);
-    inet_pton(AF_INET, ipv4_addr, &address_sock.sin_addr);
+    address_sock.sin_port = htons(server_info.server_port);
+    inet_pton(AF_INET, server_info.server_ip_adress, &address_sock.sin_addr);
 
     return address_sock;
 }
@@ -18,7 +18,6 @@ struct sockaddr_in6 create_udp_client_sockaddr(char* ipv6,int port){
     inet_pton(AF_INET6, ipv6, &udp_server_addr.sin6_addr);
     udp_server_addr.sin6_port = htons(port);
     return udp_server_addr;
-
 }
 
 //create a Message_TCP struct and send it to the socket passed

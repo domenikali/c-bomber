@@ -9,6 +9,8 @@
 #include <endian.h>
 #include <stdarg.h> 
 #include <pthread.h>
+#include <sys/stat.h> 
+#include <fcntl.h>
 
 #define DEBUG 1
 #define MESSAGE_LEN 1024
@@ -79,6 +81,12 @@ struct Partial_grid{
 };
 typedef struct Partial_grid Partial_grid;
 
+struct Server_info{
+    char * server_ip_adress;
+    int server_port;
+};
+typedef struct Server_info Server_info;
+
 Message_header create_header(uint16_t codereq, uint16_t id, uint16_t eq);
 
 Message_action create_action(uint16_t num_action,uint16_t action);
@@ -123,4 +131,9 @@ Partial_grid deserialize_partial(char* char_msg);
 
 
 void  print(LogLevel level, const char *format, ...) ;
+
+char * trim (char * str);
+
+Server_info get_server_info();
+
 #endif
